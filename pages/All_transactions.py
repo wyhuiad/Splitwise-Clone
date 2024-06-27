@@ -1,0 +1,1 @@
+# Show all transactions using Data editor, lock all except amount, paid by, for columns
