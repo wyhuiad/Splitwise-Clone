@@ -1,5 +1,6 @@
 from datetime import datetime
+import pandas as pd
 
-currencies_dict = {"HKD":1,"JPY":3,"TWD":7,"KRW":10,"USD":0,"CNY":9}
-
-print(type(tuple(currencies_dict.keys())))
+new_transaction_df = pd.DataFrame([[1,2,3,4,5,6,7,8,9]],columns=["Date","Time","Item","Currency","Amount","Paid by","For","Split","to HKD"])
+print(new_transaction_df.head())
+#print(type(tuple(currencies_dict.keys())))

@@ -1,9 +1,11 @@
+from posixpath import split
 import streamlit as st
 import pandas as pd
 from datetime import datetime
 
 # CONSTANTS
 currencies_dict = {"HKD":999,"JPY":3,"TWD":7,"KRW":10,"USD":1,"CNY":9}
+transactions_df = pd.read_csv("transactions.csv")
 
 input_date = st.date_input("Date of transaction",datetime.now())
 st.write("Date of transaction: ",input_date)
@@ -26,6 +28,28 @@ else:
 paid_by = st.radio("Paid by",active_users)
 
 split_with = st.multiselect("Split with",active_users)
+split_column = []
+user_amount_sum = 0
+
+
+if "split_column" not in st.session_state:
+    st.session_state["split_column"] = []
+
+for user in split_with:
+    amount_for_user = st.number_input(user,value=input_amount/len(split_with))
+    split_column.append(amount_for_user)
+    user_amount_sum += amount_for_user
+    st.session_state["split_column"] = split_column
+    st.session_state["user_amount_sum"] = user_amount_sum
+
+st.write(st.session_state["split_column"])
+
+if user_amount_sum != input_amount:
+    st.write("The amount for users does not add up to ",input_amount," , please check.")
+    st.session_state["Valid"] = False
+else:
+    st.session_state["Valid"] = True
+
 # input_amount to HKD
 
 if 'exchange_rate' in st.session_state:
@@ -40,9 +64,19 @@ if input_currency == "HKD":
     rate = 1
 else:
     rate = rate_data[currencies_dict[input_currency]] 
-
-amount_HKD = input_amount * rate
 st.write("Rate of currency: ", rate)
-st.write("Transaction amount in HKD: ", amount_HKD)
 
-input_submit_button = st.button("Submit")
+split_column_HKD = []
+
+if st.session_state["Valid"] != False:
+    if st.button("Submit"):
+        for i in split_column:
+            split_column_HKD.append(i*rate)
+
+        new_transaction_df = pd.DataFrame([[input_date,input_time,input_item,input_currency,input_amount,paid_by,split_with,split_column,split_column_HKD]],columns=["Date","Time","Item","Currency","Amount","Paid by","For","Split","to HKD"])
+
+        #new_transaction_df = pd.DataFrame.from_dict({"Date":input_date,"Time":input_time,"Item":input_item,"Currency":input_currency,"Amount":input_amount,"Paid by":paid_by,"For":split_with,"Split":split_column,"to HKD":split_column_HKD})
+        transactions_df = pd.concat([transactions_df,new_transaction_df],ignore_index=True)
+        st.session_state['transactions_df'] = transactions_df
+
+st.write(st.session_state['transactions_df'])
