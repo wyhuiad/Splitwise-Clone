@@ -1,1 +1,4 @@
-﻿Date,Time,Item,Currency,Amount,Paid by,For,Split,to HKD
+,Date,Time,Item,Currency,Amount,Paid by,For,Split,to HKD
+0,2024-06-28,14:16:00,test 1,HKD,450.0,Adrian,"['Adrian', 'Ken', 'Lara']","[150.0, 150.0, 150.0]","[150.0, 150.0, 150.0]"
+1,2024-06-28,14:17:00,test 2,HKD,300.0,Ken,"['Ken', 'Lara']","[150.0, 150.0]","[150.0, 150.0]"
+2,2024-06-28,14:19:00,test 3,JPY,5000.0,Lara,"['Ken', 'Lara']","[2500.0, 2500.0]","[np.float64(124.525), np.float64(124.525)]"
