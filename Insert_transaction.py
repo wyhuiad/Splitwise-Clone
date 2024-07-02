@@ -6,6 +6,9 @@ from datetime import datetime
 currencies_dict = {"HKD":999,"JPY":3,"TWD":7,"KRW":10,"USD":1,"CNY":9}
 transactions_csv_columns = ["Date","Time","Item","Currency","Amount","Paid by","For","Split","to HKD"]
 
+st.header('WiseSplit - Insert transaction')
+st.divider()
+
 input_date = st.date_input("Date of transaction",datetime.now())
 st.write("Date of transaction: ",input_date)
 
@@ -82,6 +85,10 @@ if st.session_state["Valid"] != False:
         transactions_df = pd.concat([transactions_df,new_transaction_df],ignore_index=True)
         st.session_state['transactions_df'] = transactions_df
 
-        pd.DataFrame.to_csv(transactions_df,'transactions.csv')
+        pd.DataFrame.to_csv(transactions_df,'transactions.csv',index=False)
+        st.write('Transaction recorded')
+        st.divider()
+    else:
+        st.divider()
 
 st.write(st.session_state['transactions_df'])
